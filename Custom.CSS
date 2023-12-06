@@ -48,22 +48,20 @@ nav{
     border-color: red;
 }
 
-/* Reset wat standaardmarges en paddings */
 body, h1, form {
     margin: 0;
     padding: 0;
 }
 
-/* Basisstijlen voor de container */
 .container {
     max-width: 600px;
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ccc;
+    background-color: lightgray;
     border-radius: 5px;
 }
 
-/* Stijlen voor het formulierelementen */
 form {
     display: grid;
     gap: 15px;
@@ -96,4 +94,36 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #45a049;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+h1 {
+    margin: 0;
+}
+
+.bio, .skills, .contact {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: lightgray;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: black;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
 }
