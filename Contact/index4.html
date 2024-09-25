@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,7 @@
     <nav class="navbar navbar-expand-lg bg-Custom">
       <div class="container-fluid">
         <li class="nav-item2">
-          <img src="../img/LizoraSoftwareLogo.png" alt="">
+          <img src="../img/LizoraSoftwareLogo.png" alt="Lizora Software Logo">
         </li>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -23,10 +23,10 @@
               <a class="nav-link" href="../index.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../About_me/index2.html">About me</a>
+              <a class="nav-link" href="../About_me/index2.html">Over mij</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../Project/index3.html">Projects</a>
+              <a class="nav-link" href="../Project/index3.html">Projecten</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../Contact/index4.html">Contact</a>
@@ -49,19 +49,56 @@
     <!-- Specifieke container voor contact, met class "contact-container" -->
     <div class="container contact-container">
       <h1>Contacteer mij</h1>
-      <form action="../Verstuur_Email.php" method="post">
-        <label for="name">Naam:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="message">Bericht:</label>
-        <textarea id="message" name="message" rows="4" required></textarea>
-
-        <input type="submit" value="Verstuur">
+      <!-- Formulier van Formspree -->
+      <form id="contactForm" method="POST">
+        <div class="mb-3">
+          <label for="email" class="form-label">Jouw e-mail:</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="message" class="form-label">Jouw bericht:</label>
+          <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Verstuur</button>
       </form>
     </div>
+
+    <!-- JavaScript voor bevestigingsvenster en leegmaken van het formulier na succesvolle verzending -->
+    <script>
+      document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Voorkomt standaard verzending van het formulier
+
+        var confirmation = confirm("Weet je zeker dat je het bericht wilt verzenden?");
+        if (!confirmation) {
+          return; // Annuleer als de gebruiker op 'Annuleren' klikt
+        }
+
+        // Formulierdata verzamelen
+        var formData = new FormData(event.target);
+
+        // Verzenden via fetch
+        fetch('https://formspree.io/f/xeojbbrb', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            // Reset het formulier als de verzending succesvol was
+            event.target.reset();
+            alert("E-mail is verzonden. Bedankt voor uw bericht!");
+          } else {
+            alert("Er was een probleem met het verzenden van uw bericht.");
+          }
+        })
+        .catch(error => {
+          alert("Er was een probleem met het verzenden van uw bericht.");
+          console.error('Error:', error);
+        });
+      });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   </body>
