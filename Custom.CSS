@@ -54,13 +54,21 @@ body, h1, form {
 }
 
 .container {
-    max-width: 600px;
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ccc;
     background-color: lightgray;
     border-radius: 5px;
 }
+
+.contact-container {
+    max-width: 600px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: lightgray;
+    border-radius: 5px;
+  }
+  
 
 form {
     display: grid;
