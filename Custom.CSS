@@ -1,36 +1,39 @@
+/* Algemeen voor alle schermgroottes */
 .bg-Custom {
     background-color: blue;
 }
 
-nav{
+nav {
     display: flex;
     flex-direction: row;
     gap: 16px;
 }
 
-.nav-item a{
+.nav-item a {
     color: white;
     font-family: "Montserrat";
+    text-decoration: none; /* Verwijder onderlijnen op links */
 }
 
-.nav-item2 a{
+.nav-item2 a {
     color: white;
+    text-decoration: none; /* Verwijder onderlijnen op links */
 }
 
-.hero h1{
+.hero h1 {
     font-size: 2em;
 }
 
-.nav-item2{
+.nav-item2 {
     height: 3rem;
     display: flex;
 }
 
-.card-body h5{
+.card-body h5 {
     font-size: 32px;
 }
 
-.bg-image{
+.bg-image {
     background-image: url("img/LizoraLogoWatermerk.png");
     height: 20vh;
     background-size: cover;
@@ -38,27 +41,53 @@ nav{
     background-color: black;
 }
 
-.card-body{
+.card-body {
     background-color: gray;
     color: white;
 }
 
-.card-body a{
+.card-body a {
     background-color: red;
     border-color: red;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
 }
 
+.card-body a:hover {
+    background-color: blue;
+}
+
+.card:hover{
+    transform: scale(1.05);
+}
+/* Reset margins en paddings */
 body, h1, form {
     margin: 0;
     padding: 0;
 }
 
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: white;
+    overflow-x: hidden; /* Voorkomt horizontaal scrollen */
+}
+
+h1 {
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+/* Containers */
 .container {
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ccc;
     background-color: lightgray;
     border-radius: 5px;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .contact-container {
@@ -67,9 +96,25 @@ body, h1, form {
     border: 1px solid #ccc;
     background-color: lightgray;
     border-radius: 5px;
-  }
-  
+}
 
+.bio, .skills, .contact, .home-section {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: lightgray;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.Google-Maps {
+    text-align: center;
+}
+
+.row {
+    justify-content: space-evenly;
+}
+
+/* Formulier styling */
 form {
     display: grid;
     gap: 15px;
@@ -80,9 +125,7 @@ label {
     font-weight: bold;
 }
 
-input[type="text"],
-input[type="email"],
-textarea {
+input[type="text"], input[type="email"], textarea {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -104,41 +147,54 @@ input[type="submit"]:hover {
     background-color: #45a049;
 }
 
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: white;
+/* Responsive aanpassingen voor kleinere schermen */
+@media (max-width: 768px) {
+    .bg-image {
+        height: 15vh; /* Verklein achtergrond op kleinere schermen */
+    }
+
+    .hero h1 {
+        font-size: 1.5em;
+    }
+
+    .nav-item a {
+        font-size: 1rem;
+    }
+
+    .container, .bio, .skills, .contact, .home-section {
+        padding: 10px;
+    }
+
+    .contact-container {
+        max-width: 90%; /* Breder op mobiele schermen */
+        padding: 10px;
+    }
+
+    input[type="text"], input[type="email"], textarea {
+        padding: 8px; /* Minder padding voor kleinere schermen */
+    }
+
+    input[type="submit"] {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .nav-item2 img {
+        width: 40px; /* Logo verkleinen op mobiele schermen */
+    }
 }
 
-h1 {
-    margin: 0;
-}
+/* Media query voor zeer kleine schermen */
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.2em;
+    }
 
-.bio, .skills, .contact {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: lightgray;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+    .container, .bio, .skills, .contact, .home-section {
+        padding: 5px;
+    }
 
-h2 {
-    color: black;
-}
-
-.home-section {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: lightgray;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.Google-Maps {
-    text-align: center;
-}
-
-.row {
-    justify-content:space-evenly;
+    .contact-container {
+        max-width: 100%;
+    }
 }
