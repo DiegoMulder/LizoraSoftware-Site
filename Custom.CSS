@@ -197,4 +197,31 @@ input[type="submit"]:hover {
     .contact-container {
         max-width: 100%;
     }
+
+    .Google-Maps {
+        display: flex;
+        justify-content: center;  /* Zorgt ervoor dat de iframe wordt gecentreerd */
+        align-items: center;
+        margin: 20px 0;  /* Voegt ruimte boven en onder de Google Maps sectie toe */
+        width: 100%;  /* Zorgt ervoor dat de container de volledige breedte neemt */
+    }
+    
+    .Google-Maps iframe {
+        width: 100%;
+        max-width: 800px;  /* Beperk de maximale breedte op grotere schermen */
+        height: 450px;  /* Standaard hoogte, kan naar wens worden aangepast */
+        border: none;  /* Verwijder eventuele randen */
+    }
+    
+    @media (max-width: 768px) {
+        .Google-Maps iframe {
+            height: 300px;  /* Verklein de hoogte op kleinere schermen */
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .Google-Maps iframe {
+            height: 200px;  /* Nog compacter voor zeer kleine schermen */
+        }
+    }  
 }
