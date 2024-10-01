@@ -35,10 +35,11 @@ nav {
 
 .bg-image {
     background-image: url("img/LizoraLogoWatermerk.png");
-    height: 20vh;
-    background-size: cover;
+    height: 20vh;                   /* 20% van de viewport hoogte */
+    background-size: cover;         /* Zorg dat de afbeelding de hele achtergrond vult */
     background-position: center;
     background-color: black;
+    position: relative;             /* Maakt het mogelijk dat kinderen absoluut gepositioneerd worden */
 }
 
 .card-body {
@@ -59,9 +60,16 @@ nav {
     background-color: blue;
 }
 
-.card:hover{
+.card:hover {
     transform: scale(1.05);
 }
+
+/* Fixed height for images in cards */
+.card-img-top {
+    height: 200px; /* Set a fixed height */
+    object-fit: cover; /* Ensure images cover the area without distortion */
+}
+
 /* Reset margins en paddings */
 body, h1, form {
     margin: 0;
@@ -147,6 +155,31 @@ input[type="submit"]:hover {
     background-color: #45a049;
 }
 
+/* Tekstcontainer boven de achtergrondafbeelding */
+.text-container {
+    background-color: gray;         /* Achtergrondkleur voor de container */
+    border-radius: 5px;             /* Afgeronde hoeken */
+    padding: 5px 20px;              /* Voeg padding toe aan de boven- en onderkant */
+    text-align: center;             /* Centreert de tekst horizontaal */
+    line-height: 50px;              /* Zorg ervoor dat de tekst verticaal gecentreerd is */
+    position: absolute;             /* Absoluut gepositioneerd binnen de .bg-image */
+    top: 50%;                       /* Zorg ervoor dat de tekst iets naar beneden is verschoven */
+    left: 50%;                      /* Horizontaal centreren */
+    transform: translate(-50%, -50%); /* Volledig centreren zowel horizontaal als verticaal */
+    color: white;                   /* Tekstkleur wit voor leesbaarheid */
+    width: auto;                    /* Breedte aanpassen op basis van de tekst */
+    max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
+    box-sizing: border-box;
+    height: 40px;
+}
+
+/* Styling voor de tekst */
+.text-container h1 {
+    margin: 0;                      /* Verwijder de marge rond h1 */
+    font-size: 24px;                /* Pas de lettergrootte aan indien nodig */
+    color: white;                   /* Tekst moet wit zijn */
+}
+
 /* Responsive aanpassingen voor kleinere schermen */
 @media (max-width: 768px) {
     .bg-image {
@@ -186,6 +219,10 @@ input[type="submit"]:hover {
 
 /* Media query voor zeer kleine schermen */
 @media (max-width: 480px) {
+    .bg-image {
+        height: 12vh; /* Nog kleiner voor mobiele schermen */
+    }
+
     .hero h1 {
         font-size: 1.2em;
     }
@@ -212,16 +249,16 @@ input[type="submit"]:hover {
         height: 450px;  /* Standaard hoogte, kan naar wens worden aangepast */
         border: none;  /* Verwijder eventuele randen */
     }
-    
-    @media (max-width: 768px) {
-        .Google-Maps iframe {
-            height: 300px;  /* Verklein de hoogte op kleinere schermen */
-        }
+}
+
+@media (max-width: 768px) {
+    .Google-Maps iframe {
+        height: 300px;  /* Verklein de hoogte op kleinere schermen */
     }
-    
-    @media (max-width: 480px) {
-        .Google-Maps iframe {
-            height: 200px;  /* Nog compacter voor zeer kleine schermen */
-        }
-    }  
+}
+
+@media (max-width: 480px) {
+    .Google-Maps iframe {
+        height: 200px;  /* Nog compacter voor zeer kleine schermen */
+    }
 }
