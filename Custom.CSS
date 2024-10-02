@@ -180,6 +180,22 @@ input[type="submit"]:hover {
     color: white;                   /* Tekst moet wit zijn */
 }
 
+.nav-item2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;  /* Zorg ervoor dat de afbeelding gecentreerd blijft in de container */
+    width: 80px;              /* Vaste breedte voor de container */
+    height: 80px;             /* Vaste hoogte voor de container */
+}
+
+.nav-item2 img {
+    max-width: 100%;          /* Zorg ervoor dat de afbeelding niet breder is dan de container */
+    max-height: 100%;         /* Zorg ervoor dat de afbeelding niet hoger is dan de container */
+    object-fit: contain;      /* Houd de originele verhoudingen van de afbeelding zonder deze te vervormen */
+}
+
+
+
 /* Responsive aanpassingen voor kleinere schermen */
 @media (max-width: 768px) {
     .bg-image {
