@@ -170,11 +170,36 @@ input[type="submit"]:hover {
     width: auto;                    /* Breedte aanpassen op basis van de tekst */
     max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
     box-sizing: border-box;
-    height: 40px;
+    height: 56px;
 }
+
+.text-container2 {
+    background-color: gray;         /* Achtergrondkleur voor de container */
+    border-radius: 5px;             /* Afgeronde hoeken */
+    padding: 5px 20px;             /* Voeg padding toe aan de boven- en onderkant */
+    text-align: center;             /* Centreert de tekst horizontaal */
+    line-height: 50px;              /* Zorg ervoor dat de tekst verticaal gecentreerd is */
+    position: relative;             /* Absoluut gepositioneerd binnen de .bg-image */
+    top: 50%;                       /* Zorg ervoor dat de tekst iets naar beneden is verschoven */
+    left: 50%;                      /* Horizontaal centreren */
+    transform: translate(-50%, -20%); /* Volledig centreren zowel horizontaal als verticaal */
+    color: white;                   /* Tekstkleur wit voor leesbaarheid */
+    display: inline-flex;         /* Maak de container breedte afhankelijk van de inhoud */
+    max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
+    box-sizing: border-box;         /* Zorgt ervoor dat padding wordt meegerekend in de breedte */
+    min-height: 50px;   
+    height: 20px;
+}
+
 
 /* Styling voor de tekst */
 .text-container h1 {
+    margin: 0;                      /* Verwijder de marge rond h1 */
+    font-size: 36px;                /* Pas de lettergrootte aan indien nodig */
+    color: white;                   /* Tekst moet wit zijn */
+}
+
+.text-container h2 {
     margin: 0;                      /* Verwijder de marge rond h1 */
     font-size: 24px;                /* Pas de lettergrootte aan indien nodig */
     color: white;                   /* Tekst moet wit zijn */
