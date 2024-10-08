@@ -199,7 +199,7 @@ input[type="submit"]:hover {
     color: white;                   /* Tekst moet wit zijn */
 }
 
-.text-container h2 {
+.text-container2 h2 {
     margin: 0;                      /* Verwijder de marge rond h1 */
     font-size: 24px;                /* Pas de lettergrootte aan indien nodig */
     color: white;                   /* Tekst moet wit zijn */
