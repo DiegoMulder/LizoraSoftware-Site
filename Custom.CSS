@@ -167,7 +167,6 @@ input[type="submit"]:hover {
     left: 50%;                      /* Horizontaal centreren */
     transform: translate(-50%, -50%); /* Volledig centreren zowel horizontaal als verticaal */
     color: white;                   /* Tekstkleur wit voor leesbaarheid */
-    width: auto;                    /* Breedte aanpassen op basis van de tekst */
     max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
     box-sizing: border-box;
     height: 56px;
@@ -182,7 +181,7 @@ input[type="submit"]:hover {
     position: relative;             /* Absoluut gepositioneerd binnen de .bg-image */
     top: 50%;                       /* Zorg ervoor dat de tekst iets naar beneden is verschoven */
     left: 50%;                      /* Horizontaal centreren */
-    transform: translate(-50%, -20%); /* Volledig centreren zowel horizontaal als verticaal */
+    transform: translate(-50%, -10%); /* Volledig centreren zowel horizontaal als verticaal */
     color: white;                   /* Tekstkleur wit voor leesbaarheid */
     display: inline-flex;         /* Maak de container breedte afhankelijk van de inhoud */
     max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
@@ -195,7 +194,7 @@ input[type="submit"]:hover {
 /* Styling voor de tekst */
 .text-container h1 {
     margin: 0;                      /* Verwijder de marge rond h1 */
-    font-size: 36px;                /* Pas de lettergrootte aan indien nodig */
+    font-size: 30px;                /* Pas de lettergrootte aan indien nodig */
     color: white;                   /* Tekst moet wit zijn */
 }
 
