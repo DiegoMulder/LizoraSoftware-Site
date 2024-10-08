@@ -169,6 +169,7 @@ input[type="submit"]:hover {
     color: white;                   /* Tekstkleur wit voor leesbaarheid */
     max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
     box-sizing: border-box;
+    min-height: 50px;
     height: 50px;
 }
 
@@ -181,13 +182,13 @@ input[type="submit"]:hover {
     position: relative;             /* Absoluut gepositioneerd binnen de .bg-image */
     top: 50%;                       /* Zorg ervoor dat de tekst iets naar beneden is verschoven */
     left: 50%;                      /* Horizontaal centreren */
-    transform: translate(-50%, -20%); /* Volledig centreren zowel horizontaal als verticaal */
+    transform: translate(-50%, -10%); /* Volledig centreren zowel horizontaal als verticaal */
     color: white;                   /* Tekstkleur wit voor leesbaarheid */
     display: inline-flex;         /* Maak de container breedte afhankelijk van de inhoud */
     max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
     box-sizing: border-box;         /* Zorgt ervoor dat padding wordt meegerekend in de breedte */
-    min-height: 50px;   
-    height: 20px;
+    min-height: 45px;   
+    height: 45px;
 }
 
 
