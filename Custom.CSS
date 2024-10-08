@@ -194,7 +194,15 @@ input[type="submit"]:hover {
     object-fit: contain;      /* Houd de originele verhoudingen van de afbeelding zonder deze te vervormen */
 }
 
-
+.bio img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    object-fit: contain;
+    border-radius: 140px;   
+    width: 100px;
+    height: 100px; 
+}
 
 /* Responsive aanpassingen voor kleinere schermen */
 @media (max-width: 768px) {
