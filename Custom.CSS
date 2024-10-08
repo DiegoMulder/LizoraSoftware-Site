@@ -169,8 +169,8 @@ input[type="submit"]:hover {
     color: white;                   /* Tekstkleur wit voor leesbaarheid */
     max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
     box-sizing: border-box;
-    min-height: 50px;
-    height: 50px;
+    min-height: 45px;
+    height: 45px;
 }
 
 .text-container2 {
@@ -187,8 +187,8 @@ input[type="submit"]:hover {
     display: inline-flex;         /* Maak de container breedte afhankelijk van de inhoud */
     max-width: 90%;                 /* Max breedte, zodat het goed past op mobiele apparaten */
     box-sizing: border-box;         /* Zorgt ervoor dat padding wordt meegerekend in de breedte */
-    min-height: 45px;   
-    height: 45px;
+    min-height: 40px;   
+    height: 40px;
 }
 
 
