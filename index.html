@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Lizora Software: horrorgames van Diëgo Mulder.">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/favicon.png">
+<title>Lizora Software</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: één donkere gang. Het logo-patroon hangt in het donker en wordt door een zaklamp (de cursor) onthuld; daaronder de games als dossiers. */
+:root{
+  color-scheme:dark;
+  --void:#03030a;        /* achtergrond, zwart met blauwe zweem */
+  --panel:#0a0b1c;       /* vlakken */
+  --line:#1c1f45;        /* randen */
+  --blue:#0000ff;        /* Lizora-blauw uit het logo */
+  --glow:#6b78ff;        /* leesbare lichte variant voor tekst */
+  --ink:#eceeff;         /* tekst */
+  --dim:#8a8fb8;         /* secundaire tekst */
+  --good:#58e08c;        /* gelukt */
+  --bad:#ff5a6a;         /* fout */
+  --display:"Unbounded","Arial Black",Impact,sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+/* alles schaalt mee met de schermbreedte: telefoon tot bioscoopscherm */
+html{scroll-behavior:smooth;font-size:clamp(16px,.9vw,80px)}
+body{background:var(--void);color:var(--ink);font:400 1.0625rem/1.6 var(--body);overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+.wrap{max-width:72.5rem;margin-inline:auto;padding-inline:1.25rem}
+.mono{font:600 0.75rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--glow)}
+
+/* korrel + scanlines over alles */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--void) 78%,transparent);
+  backdrop-filter:blur(0.625rem);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:0.75rem;flex-wrap:wrap}
+.nav img{height:1.375rem;display:block}
+.nav ul{display:flex;gap:1.375rem;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.nav a{font:600 0.75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--dim);transition:color .2s}
+.nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{position:relative;isolation:isolate;border-bottom:1px solid var(--line);overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.hero .wrap{padding-block:clamp(4.5rem,13vw,9.375rem);display:flex;flex-direction:column;gap:1.625rem;align-items:flex-start}
+.logo-box{position:relative;width:min(100%,47.5rem)}
+.logo-box img{display:block;width:100%;filter:drop-shadow(0 0 2.125rem rgba(0,0,255,.75))}
+.logo-box img.ghost{position:absolute;inset:0;opacity:0;mix-blend-mode:screen}
+.logo-box:hover img.ghost,.logo-box.zap img.ghost{animation:glitch .45s steps(2) 1}
+.logo-box:hover img.g2,.logo-box.zap img.g2{animation-direction:reverse}
+@keyframes glitch{
+  0%{opacity:.8;transform:translate(-10px,3px);clip-path:inset(10% 0 62% 0)}
+  25%{transform:translate(0.75rem,-4px);clip-path:inset(55% 0 12% 0)}
+  50%{transform:translate(-6px,2px);clip-path:inset(30% 0 40% 0)}
+  75%{transform:translate(0.5rem,0.3125rem);clip-path:inset(72% 0 4% 0)}
+  100%{opacity:0;transform:none}
+}
+.logo-box span{display:block;text-align:right;font:500 clamp(0.9375rem,2.6vw,1.625rem)/1 var(--display);letter-spacing:.3em;margin-top:0.75rem;padding-right:2%}
+.hero h1{font:800 clamp(1.625rem,5vw,3.375rem)/1.08 var(--display);margin:0;max-width:16ch;text-wrap:balance;text-transform:uppercase}
+.hero h1 em{font-style:normal;color:var(--glow);animation:flicker 5s infinite}
+@keyframes flicker{0%,91%,95%,100%{opacity:1}92%,94%{opacity:.25}93%{opacity:.9}}
+.hero p{margin:0;max-width:52ch;color:var(--dim)}
+.cta{display:flex;gap:0.875rem;flex-wrap:wrap}
+.btn{display:inline-block;font:600 0.8125rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  padding:1rem 1.375rem;border:1px solid var(--blue);background:var(--blue);color:#fff;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 0.75rem),calc(100% - 0.75rem) 100%,0 100%);transition:transform .15s,box-shadow .2s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:0 0 1.875rem rgba(0,0,255,.9)}
+.btn.alt{background:transparent;border-color:var(--line);color:var(--ink)}
+.hint{font:400 0.75rem/1.4 var(--mono);color:var(--dim)}
+
+/* lopende band */
+.tape{border-bottom:1px solid var(--line);background:var(--blue);overflow:hidden;padding-block:0.75rem}
+.tape div{display:flex;width:max-content;animation:tape 22s linear infinite;will-change:transform;font:800 0.9375rem/1 var(--display);text-transform:uppercase;white-space:nowrap;color:#fff}
+.tape span{margin-right:2.5rem}
+.tape span:nth-child(5n+2),.tape span:nth-child(5n+4){color:var(--void)}
+/* 8 gelijke groepen; één groep opschuiven = naadloze loop op elk scherm */
+@keyframes tape{to{transform:translateX(-12.5%)}}
+
+/* secties */
+section{padding-block:clamp(3.5rem,9vw,6.875rem)}
+.head{display:flex;flex-direction:column;gap:0.875rem;margin-bottom:2.375rem}
+h2{font:800 clamp(1.75rem,5vw,3.5rem)/1.02 var(--display);text-transform:uppercase;margin:0;text-wrap:balance}
+
+/* games */
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,28.75rem),1fr));gap:1.375rem;perspective:87.5rem}
+.game{position:relative;display:flex;flex-direction:column;text-decoration:none;background:var(--panel);border:1px solid var(--line);
+  transform-style:preserve-3d;transition:transform .18s ease-out,border-color .2s,box-shadow .2s;min-width:0}
+.game:hover{border-color:var(--blue);box-shadow:0 1.25rem 3.75rem -20px rgba(0,0,255,.8)}
+.cover{position:relative;aspect-ratio:16/9;overflow:hidden;border-bottom:1px solid var(--line)}
+.cover{background:#000}
+.cover img{width:100%;height:100%;object-fit:contain;padding:9% 16%;display:block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.cover img.fit{padding:7% 16%}
+.game:hover .cover img{transform:scale(1.08)}
+.cover::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),transparent 0,transparent 30%,rgba(3,3,10,.6) 85%)}
+.info{display:flex;flex-direction:column;gap:0.625rem;padding:1.375rem}
+.info h3{font:800 1.25rem/1.15 var(--display);margin:0;text-transform:uppercase}
+.info p{margin:0;color:var(--dim)}
+.tags{display:flex;gap:0.5rem;flex-wrap:wrap}
+.tags i{font:600 0.6875rem/1 var(--mono);font-style:normal;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);padding:0.375rem 0.5rem;color:var(--dim)}
+.tags i.live{border-color:var(--blue);color:var(--glow)}
+.go{font:600 0.75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--glow);margin-top:0.375rem}
+
+/* schoolprojecten */
+.school{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.school li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:0.5rem 1.875rem;padding-block:1.375rem;border-bottom:1px solid var(--line);transition:padding .2s,background .2s}
+.school li:hover{padding-left:0.875rem;background:linear-gradient(90deg,rgba(0,0,255,.22),transparent)}
+.school h3{font:800 clamp(1.0625rem,2.4vw,1.5rem)/1.15 var(--display);text-transform:uppercase;margin:0}
+.school p{margin:0;color:var(--dim)}
+
+/* over */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:2.5rem;align-items:start}
+.about .text{display:flex;flex-direction:column;gap:1rem;max-width:62ch}
+.about p{margin:0;color:var(--dim)}
+.about p:first-child{color:var(--ink);font-size:1.25rem;line-height:1.45}
+.facts{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--panel)}
+.facts div{display:flex;flex-direction:column;gap:0.5rem;padding:1.125rem 1.25rem;border-bottom:1px solid var(--line)}
+.facts div:last-child{border-bottom:0}
+.facts strong{font:500 1rem/1.3 var(--display)}
+
+
+/* mailformulier */
+.mailform{display:flex;flex-direction:column;gap:0.875rem;width:min(100%,38.75rem)}
+.mailform label,.codebox label{font:600 0.75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);display:flex;flex-direction:column;gap:0.5rem}
+.mailform input,.mailform textarea,.codebox input{font:400 1rem/1.5 var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:0.8125rem 0.875rem;width:100%;letter-spacing:0;text-transform:none}
+.mailform textarea{min-height:9.375rem;resize:vertical}
+.mailform input:focus,.mailform textarea:focus,.codebox input:focus{outline:none;border-color:var(--glow);box-shadow:0 0 0 3px rgba(0,0,255,.45)}
+button.btn{cursor:pointer;align-self:flex-start}
+button.btn:disabled{opacity:.5;cursor:wait}
+.note{font:400 0.875rem/1.5 var(--body);padding:0.75rem 0.875rem;border:1px solid var(--line);background:var(--panel)}
+.note.ok{border-color:var(--good);color:var(--good)}
+.note.err{border-color:var(--bad);color:var(--bad)}
+.note.demo{border-style:dashed;color:var(--dim)}
+.veil{position:fixed;inset:0;z-index:60;background:rgba(3,3,10,.86);backdrop-filter:blur(0.375rem);display:grid;place-items:center;padding:1rem}
+.codebox{width:min(100%,26.25rem);background:var(--void);border:1px solid var(--blue);box-shadow:0 0 5rem rgba(0,0,255,.6);padding:1.625rem;display:flex;flex-direction:column;gap:1rem}
+.codebox h3{font:800 1.25rem/1.15 var(--display);text-transform:uppercase;margin:0}
+.codebox p{margin:0;color:var(--dim);font-size:0.9375rem;overflow-wrap:anywhere}
+.codebox input{font:600 1.75rem/1 var(--mono);letter-spacing:.4em;text-align:center}
+.codebox .cta{justify-content:flex-start}
+.addr{font:600 0.875rem/1.4 var(--mono);color:var(--glow);user-select:all;overflow-wrap:anywhere}
+
+/* contact */
+.contact{border-top:1px solid var(--line);background:radial-gradient(ellipse at 50% 120%,rgba(0,0,255,.55),transparent 65%)}
+.contact .wrap{display:flex;flex-direction:column;gap:1.5rem;align-items:flex-start}
+.contact p{margin:0;max-width:50ch;color:var(--dim)}
+footer{border-top:1px solid var(--line);padding-block:1.625rem}
+footer .wrap{display:flex;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;font:400 0.75rem/1.4 var(--mono);color:var(--dim)}
+
+.rise{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.rise.low{transform:translateY(1.625rem)}
+
+@media (max-width:720px){
+  .about,.school li{grid-template-columns:minmax(0,1fr)}
+  .nav ul{gap:0.875rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#top" aria-label="Lizora Software, naar boven"><img src="img/logo.png" alt="Lizora"></a>
+    <nav aria-label="Hoofdmenu">
+      <ul>
+        <li><a href="#games">Games</a></li>
+        <li><a href="#over">Over</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero" id="hero">
+    <canvas id="dark" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="logo-box" id="logoBox">
+        <img src="img/logo.png" alt="Lizora Software" id="logoImg">
+        <img src="img/logo.png" alt="" class="ghost" style="filter:hue-rotate(120deg)">
+        <img src="img/logo.png" alt="" class="ghost g2" style="filter:hue-rotate(-90deg)">
+        <span>Software</span>
+      </div>
+      <h1>Korte games die <em>lang</em> blijven hangen.</h1>
+      <p>Lizora Software is de indie studio van Diëgo Mulder. Horrorgames, ghost hunting en alles wat je liever niet in het donker speelt.</p>
+      <div class="cta">
+        <a class="btn" href="#games">Bekijk de games</a>
+        <a class="btn alt" href="https://lizora-software.itch.io" target="_blank" rel="noopener">Speel op itch.io</a>
+      </div>
+      <span class="hint">Beweeg je muis: jij hebt de zaklamp.</span>
+    </div>
+  </div>
+
+  <div class="tape" aria-hidden="true">
+    <div>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+    </div>
+  </div>
+
+  <section id="games">
+    <div class="wrap">
+      <div class="head rise">
+        <span class="mono">Eigen projecten</span>
+        <h2>De games</h2>
+      </div>
+      <div class="games">
+        <a class="game rise" href="https://lizora-software.itch.io/backrooms-the-lost-level" target="_blank" rel="noopener">
+          <div class="cover"><img src="img/lostlevel.jpg" alt="Logo van Backrooms: The Lost Level"></div>
+          <div class="info">
+            <div class="tags"><i class="live">Uit op itch.io</i><i>Horror</i><i>Kort</i></div>
+            <h3>Backrooms: The Lost Level</h3>
+            <p>Je belandt in een level van de Backrooms dat nog niemand heeft ontdekt. Er is maar één opdracht: zie te ontsnappen.</p>
+            <span class="go">Speel op itch.io →</span>
+          </div>
+        </a>
+        <a class="game rise" href="https://lizora-software.itch.io/late-night-call" target="_blank" rel="noopener">
+          <div class="cover"><img src="img/latenight.jpg" alt="Logo van Late Night Call"></div>
+          <div class="info">
+            <div class="tags"><i class="live">Uit op itch.io</i><i>Horror</i><i>Kort</i></div>
+            <h3>Late Night Call</h3>
+            <p>Je bent mortuary assistant en midden in de nacht valt de stroom uit. Zet de breaker weer aan en rond je laatste taken af, terwijl er een demon rondspookt. Ben je te laat of banish je hem niet, dan neemt hij je over.</p>
+            <span class="go">Speel op itch.io →</span>
+          </div>
+        </a>
+        <a class="game rise" href="https://lizora-software.itch.io/theghosthuntr?secret=zXIO1NSUED3AFfbYEEXE6ovU" target="_blank" rel="noopener">
+          <div class="cover"><img class="fit" src="img/ghost.jpg" alt="Logo van TheGhostHuntr: een groen spookje"></div>
+          <div class="info">
+            <div class="tags"><i class="live">Nu speelbaar</i><i>Co-op tot 4</i><i>Proximity chat</i></div>
+            <h3>TheGhostHuntr</h3>
+            <p>Ga met een groep van vier op geestenjacht. Zoek evidence om te raden welke geest er rondwaart, en weet je het zeker, start dan het ritueel om hem te banishen. Met proximity chat hoor je elkaar alleen als je dichtbij bent.</p>
+            <span class="go">Speel op itch.io →</span>
+          </div>
+        </a>
+        <a class="game rise" href="https://lizora-software.itch.io/horrific-dreamer?secret=iMnUBEkr7e5Fb117G2xx4D5E4Y" target="_blank" rel="noopener">
+          <div class="cover"><img src="img/dreamer.jpg" alt="Logo van Horrific Dreamer"></div>
+          <div class="info">
+            <div class="tags"><i>Eerste project</i><i>Horror</i><i>Herspeelbaar</i></div>
+            <h3>Horrific Dreamer</h3>
+            <p>Je zit vast in een slechte lucide droom. Zoek alle sleutels in een groot gebied terwijl je wordt achtervolgd. Heb je ze allemaal, dan verschijnt ergens een deur: je enige weg uit de droom.</p>
+            <span class="go">Bekijk op itch.io →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="over" style="padding-top:0">
+    <div class="wrap">
+      <div class="head rise">
+        <span class="mono">Over</span>
+        <h2>Eén developer, veel nachtmerries</h2>
+      </div>
+      <div class="about">
+        <div class="facts rise">
+          <div><span class="mono">Wie</span><strong>Diëgo Mulder, game developer</strong></div>
+          <div><span class="mono">Studio</span><strong>Lizora Software</strong></div>
+          <div><span class="mono">Specialiteit</span><strong>Horrorgames</strong></div>
+          <div><span class="mono">Games</span><strong>4 op itch.io</strong></div>
+        </div>
+        <div class="text rise">
+          <p>Games zijn altijd mijn grote passie geweest. Ik wil unieke, boeiende ervaringen maken voor spelers over de hele wereld.</p>
+          <p>Een meeslepende gamewereld bouwen, spannende gameplay bedenken of een technisch probleem oplossen: ik geniet van elk onderdeel van game development.</p>
+          <p>Ik leer steeds nieuwe technieken om betere games te maken. Het doel blijft hetzelfde: iets nieuws proberen en spelers een goede tijd bezorgen, ook als die tijd een beetje eng is.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <span class="mono">Contact</span>
+      <h2>Durf je het aan?</h2>
+      <p>Stuur me een bericht. Het komt binnen op <span class="addr">LizoraSoftware@gmail.com</span> en ik antwoord op het adres dat je hier invult.</p>
+      <form class="mailform" id="mailForm" novalidate>
+        <label for="mfEmail">Jouw e-mailadres
+          <input id="mfEmail" type="email" autocomplete="email" placeholder="naam@voorbeeld.nl" required>
+        </label>
+        <label for="mfText">Jouw bericht
+          <textarea id="mfText" placeholder="Waar gaat het over?" required maxlength="4000"></textarea>
+        </label>
+        <button class="btn" type="submit" id="mfSend">Verzend</button>
+        <div class="note" id="mfNote" role="status" hidden></div>
+      </form>
+      <div class="cta">
+        <a class="btn alt" href="https://lizora-software.itch.io" target="_blank" rel="noopener">Volg op itch.io</a>
+      </div>
+      <div class="veil" id="veil" hidden>
+        <form class="codebox" id="codeForm" role="dialog" aria-modal="true" aria-labelledby="codeTitle" novalidate>
+          <h3 id="codeTitle">Vul je code in</h3>
+          <p id="codeInfo"></p>
+          <label for="codeIn">Code van 6 cijfers
+            <input id="codeIn" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+          </label>
+          <div class="note err" id="codeErr" role="alert" hidden></div>
+          <div class="cta">
+            <button class="btn" type="submit" id="codeOk">Bevestig en verstuur</button>
+            <button class="btn alt" type="button" id="codeCancel">Annuleer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 Lizora Software</span><span>Diëgo Mulder</span></div>
+</footer>
+
+<script>
+(function(){
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.getElementById('hero'), cv = document.getElementById('dark'), ctx = cv.getContext('2d');
+  var logo = document.getElementById('logoImg'), pat = document.createElement('canvas');
+  var W = 0, H = 0, mx = 0, my = 0, tx = 0, ty = 0, hasMouse = false, t0 = performance.now();
+
+  /* het schuine logo-patroon uit de huisstijl, één keer getekend */
+  function build(){
+    var r = hero.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = pat.width = W * d; cv.height = pat.height = H * d;
+    var p = pat.getContext('2d'); p.setTransform(d,0,0,d,0,0); p.clearRect(0,0,W,H);
+    if(!logo.naturalWidth) return;
+    var lw = Math.max(200, Math.min(W * .26, Math.max(340, W * .18))), lh = lw * logo.naturalHeight / logo.naturalWidth;
+    var sx = lw * 1.25, sy = lh * 2.1, n = 0;
+    p.translate(W/2, H/2); p.rotate(-Math.PI/3);
+    var R = Math.hypot(W, H) / 2 + lw;
+    for(var y = -R; y < R; y += sy){
+      n++;
+      for(var x = -R - (n % 2) * sx / 2, k = 0; x < R; x += sx, k++){
+        p.globalAlpha = [1, .55, .3][(k + n * 2) % 3];
+        p.drawImage(logo, x, y, lw, lh);
+      }
+    }
+    ctx.setTransform(d,0,0,d,0,0);
+    if(!hasMouse){ mx = tx = W * .68; my = ty = H * .45; }
+    if(still) draw(0);
+  }
+  function draw(now){
+    var t = (now - t0) / 1000;
+    if(!hasMouse && !still){ tx = W * (.62 + .26 * Math.sin(t * .5)); ty = H * (.5 + .3 * Math.sin(t * .8 + 1)); }
+    mx += (tx - mx) * .12; my += (ty - my) * .12;
+    var rad = Math.max(220, Math.min(W, H) * .6) * (still ? 1 : (.96 + .04 * Math.sin(t * 23)) * (Math.random() < .015 ? .6 : 1));
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0,0,W,H);
+    ctx.drawImage(pat, 0, 0, W, H);
+    var g = ctx.createRadialGradient(mx, my, 0, mx, my, rad);
+    g.addColorStop(0, 'rgba(0,0,0,.95)'); g.addColorStop(.5, 'rgba(0,0,0,.45)'); g.addColorStop(1, 'rgba(0,0,0,.07)');
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    if(!still) requestAnimationFrame(draw);
+  }
+  hero.addEventListener('pointermove', function(e){
+    var r = hero.getBoundingClientRect(); hasMouse = true; tx = e.clientX - r.left; ty = e.clientY - r.top;
+  });
+  hero.addEventListener('pointerleave', function(){ hasMouse = false; });
+  addEventListener('resize', build);
+  if(logo.complete) build(); else logo.addEventListener('load', build);
+  if(!still) requestAnimationFrame(draw);
+
+  if(still) return;
+
+  /* logo glitcht af en toe vanzelf */
+  var box = document.getElementById('logoBox');
+  setInterval(function(){ box.classList.add('zap'); setTimeout(function(){ box.classList.remove('zap'); }, 500); }, 4200);
+
+  /* kaarten kantelen en krijgen een lichtvlek onder de cursor */
+  document.querySelectorAll('.game').forEach(function(c){
+    c.addEventListener('pointermove', function(e){
+      var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      c.style.transform = 'rotateY(' + (x - .5) * 10 + 'deg) rotateX(' + (.5 - y) * 8 + 'deg) translateY(-4px)';
+      c.style.setProperty('--mx', x * 100 + '%'); c.style.setProperty('--my', y * 160 + '%');
+    });
+    c.addEventListener('pointerleave', function(){ c.style.transform = ''; });
+  });
+
+  /* secties schuiven een stukje omhoog bij het scrollen; ze zijn altijd zichtbaar */
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove('low'); io.unobserve(e.target); } });
+    }, {rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.rise').forEach(function(el){
+      if(el.getBoundingClientRect().top > innerHeight){ el.classList.add('low'); io.observe(el); }
+    });
+  }
+})();
+</script>
+<script>
+/* Contactformulier met e-mailcontrole.
+   1. EmailJS stuurt een code van 6 cijfers naar het adres van de bezoeker.
+   2. Klopt de ingevulde code, dan gaat het bericht via Formspree naar LizoraSoftware@gmail.com.
+   Vul hieronder je drie EmailJS-gegevens in. Zolang ze leeg zijn, wordt er zonder code verstuurd. */
+(function(){
+  var FORMSPREE = 'https://formspree.io/f/xeojbbrb';
+  var EMAILJS_PUBLIC_KEY = 'NJHJvwlZa4LD9luCN';
+  var EMAILJS_SERVICE_ID = 'service_zy4ywv9';
+  var EMAILJS_TEMPLATE_ID = 'template_ahuzvco';
+
+  var $ = function(id){ return document.getElementById(id); };
+  var form = $('mailForm'), email = $('mfEmail'), text = $('mfText'), send = $('mfSend'), note = $('mfNote');
+  var veil = $('veil'), codeForm = $('codeForm'), codeIn = $('codeIn'), codeErr = $('codeErr'), codeOk = $('codeOk');
+  var pending = null; /* {addr, msg, code, until, tries} */
+  var useCode = EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID;
+
+  function say(el, kind, msg){ el.className = 'note ' + kind; el.textContent = msg; el.hidden = false; }
+  function json(url, body){
+    return fetch(url, {method:'POST', headers:{'Accept':'application/json','Content-Type':'application/json'}, body:JSON.stringify(body)})
+      .then(function(r){ return r.ok; }, function(){ return false; });
+  }
+  function newCode(){
+    var a = new Uint32Array(1); crypto.getRandomValues(a);
+    return String(100000 + a[0] % 900000);
+  }
+  function deliver(addr, msg){
+    return json(FORMSPREE, {email:addr, message:msg, _subject:'Nieuw bericht via LizoraSoftware.nl'}).then(function(ok){
+      if(ok){ text.value = ''; say(note, 'ok', 'Je bericht is verzonden. Bedankt!'); }
+      else say(note, 'err', 'Je bericht is niet verzonden. Probeer het later opnieuw of mail rechtstreeks naar LizoraSoftware@gmail.com.');
+      return ok;
+    });
+  }
+  function busy(btn, on, label){ btn.disabled = on; btn.textContent = label; }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault(); note.hidden = true;
+    var addr = email.value.trim(), msg = text.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(addr)){ say(note, 'err', 'Vul een geldig e-mailadres in, bijvoorbeeld naam@voorbeeld.nl.'); email.focus(); return; }
+    if(msg.length < 5){ say(note, 'err', 'Schrijf eerst een bericht.'); text.focus(); return; }
+    busy(send, true, 'Bezig');
+    if(!useCode){ deliver(addr, msg).then(function(){ busy(send, false, 'Verzend'); }); return; }
+    var code = newCode();
+    fetch('https://api.emailjs.com/api/v1.0/email/send', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({
+      service_id:EMAILJS_SERVICE_ID, template_id:EMAILJS_TEMPLATE_ID, user_id:EMAILJS_PUBLIC_KEY,
+      template_params:{to_email:addr, email:addr, code:code, passcode:code,
+        time:new Date(Date.now() + 10 * 60 * 1000).toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'})}
+    })}).then(function(r){ return r.text().then(function(t){ return {ok:r.ok, why:r.status + ' ' + t}; }); },
+      function(){ return {ok:false, why:'geen verbinding met de maildienst'}; }).then(function(res){
+      var ok = res.ok;
+      busy(send, false, 'Verzend');
+      if(!ok){ say(note, 'err', 'De code kon niet worden verstuurd. Controleer je e-mailadres en probeer het opnieuw. (Reden: ' + res.why.slice(0, 160) + ')'); return; }
+      pending = {addr:addr, msg:msg, code:code, until:Date.now() + 10 * 60 * 1000, tries:0};
+      $('codeInfo').textContent = 'We hebben een code gestuurd naar ' + addr + '. Vul hem binnen 10 minuten in om je bericht te versturen. Kijk ook in je spam.';
+      codeErr.hidden = true; codeIn.value = ''; veil.hidden = false; codeIn.focus();
+    });
+  });
+
+  codeForm.addEventListener('submit', function(e){
+    e.preventDefault(); codeErr.hidden = true;
+    if(!pending) return;
+    var code = codeIn.value.trim();
+    if(Date.now() > pending.until || pending.tries >= 5){
+      pending = null; veil.hidden = true;
+      say(note, 'err', 'De code is verlopen of te vaak fout ingevuld. Klik opnieuw op Verzend voor een nieuwe code.'); return;
+    }
+    if(code !== pending.code){
+      pending.tries++;
+      say(codeErr, 'err', 'Deze code klopt niet. Kijk nog eens in je mailbox en probeer het opnieuw.'); codeIn.select(); return;
+    }
+    busy(codeOk, true, 'Bezig met verzenden');
+    var p = pending; pending = null;
+    deliver(p.addr, p.msg).then(function(){ busy(codeOk, false, 'Bevestig en verstuur'); veil.hidden = true; });
+  });
+  $('codeCancel').addEventListener('click', function(){ veil.hidden = true; pending = null; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !veil.hidden){ veil.hidden = true; pending = null; } });
+})();
+</script>
+</body>
+</html>
