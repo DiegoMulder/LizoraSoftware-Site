@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/favicon.png">
+<meta name="description" content="Lizora Software: horror games by Diëgo Mulder.">
+<title>Lizora Software</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one dark corridor. The logo pattern hangs in the dark and a flashlight (the cursor) reveals it; below that the games, the beta and contact. */
+:root{
+  color-scheme:dark;
+  --void:#03030a;        /* background, black with a blue cast */
+  --panel:#0a0b1c;       /* surfaces */
+  --line:#1c1f45;        /* borders */
+  --blue:#0000ff;        /* Lizora blue from the logo */
+  --glow:#6b78ff;        /* readable light blue for text */
+  --ink:#eceeff;         /* text */
+  --dim:#8a8fb8;         /* secondary text */
+  --good:#58e08c;        /* success */
+  --bad:#ff5a6a;         /* error */
+  --ecto:#9be8a8;        /* TheGhostHuntr green, beta section only */
+  --display:"Unbounded","Arial Black",Impact,sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+/* everything scales with screen width: phone up to cinema screen */
+html{scroll-behavior:smooth;font-size:clamp(16px,.9vw,80px)}
+body{background:var(--void);color:var(--ink);font:400 1.0625rem/1.6 var(--body);overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+.wrap{max-width:72.5rem;margin-inline:auto;padding-inline:1.25rem}
+.mono{font:600 0.75rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--glow)}
+
+/* grain + scanlines over everything */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--void) 78%,transparent);
+  backdrop-filter:blur(0.625rem);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:0.75rem 1.5rem;padding-block:0.75rem;flex-wrap:wrap}
+.nav img{height:1.375rem;display:block}
+.nav-right{display:flex;align-items:center;gap:0.75rem 1.5rem;flex-wrap:wrap;min-width:0}
+.nav ul{display:flex;gap:1.375rem;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.nav a{font:600 0.75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--dim);transition:color .2s}
+.nav a:hover{color:var(--ink)}
+.auth{display:flex;align-items:center;gap:0.625rem;min-width:0}
+.who{font:400 0.75rem/1.2 var(--mono);color:var(--glow);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:16rem}
+.chip{font:600 0.6875rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:0.5rem 0.75rem;cursor:pointer;
+  border:1px solid var(--blue);background:var(--blue);color:#fff}
+.chip.alt{background:transparent;border-color:var(--line);color:var(--dim)}
+.chip:hover{box-shadow:0 0 1rem rgba(0,0,255,.8)}
+
+/* hero */
+.hero{position:relative;isolation:isolate;border-bottom:1px solid var(--line);overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.hero .wrap{padding-block:clamp(4.5rem,13vw,9.375rem);display:flex;flex-direction:column;gap:1.625rem;align-items:flex-start}
+.logo-box{position:relative;width:min(100%,47.5rem)}
+.logo-box img{display:block;width:100%;filter:drop-shadow(0 0 2.125rem rgba(0,0,255,.75))}
+.logo-box img.ghost{position:absolute;inset:0;opacity:0;mix-blend-mode:screen}
+.logo-box:hover img.ghost,.logo-box.zap img.ghost{animation:glitch .45s steps(2) 1}
+.logo-box:hover img.g2,.logo-box.zap img.g2{animation-direction:reverse}
+@keyframes glitch{
+  0%{opacity:.8;transform:translate(-10px,3px);clip-path:inset(10% 0 62% 0)}
+  25%{transform:translate(0.75rem,-4px);clip-path:inset(55% 0 12% 0)}
+  50%{transform:translate(-6px,2px);clip-path:inset(30% 0 40% 0)}
+  75%{transform:translate(0.5rem,0.3125rem);clip-path:inset(72% 0 4% 0)}
+  100%{opacity:0;transform:none}
+}
+.hero h1{font:800 clamp(1.625rem,5vw,3.375rem)/1.08 var(--display);margin:0;max-width:16ch;text-wrap:balance;text-transform:uppercase}
+.hero h1 em{font-style:normal;color:var(--glow);animation:flicker 5s infinite}
+@keyframes flicker{0%,91%,95%,100%{opacity:1}92%,94%{opacity:.25}93%{opacity:.9}}
+.hero p{margin:0;max-width:52ch;color:var(--dim)}
+.cta{display:flex;gap:0.875rem;flex-wrap:wrap}
+.btn{display:inline-block;font:600 0.8125rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  padding:1rem 1.375rem;border:1px solid var(--blue);background:var(--blue);color:#fff;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 0.75rem),calc(100% - 0.75rem) 100%,0 100%);transition:transform .15s,box-shadow .2s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:0 0 1.875rem rgba(0,0,255,.9)}
+.btn.alt{background:transparent;border-color:var(--line);color:var(--ink)}
+.hint{font:400 0.75rem/1.4 var(--mono);color:var(--dim)}
+
+/* marquee */
+.tape{border-bottom:1px solid var(--line);background:var(--blue);overflow:hidden;padding-block:0.75rem}
+.tape div{display:flex;width:max-content;animation:tape 22s linear infinite;will-change:transform;font:800 0.9375rem/1 var(--display);text-transform:uppercase;white-space:nowrap;color:#fff}
+.tape span{margin-right:2.5rem}
+.tape span:nth-child(5n+2),.tape span:nth-child(5n+4){color:var(--void)}
+/* 8 equal groups; moving exactly one group = a seamless loop on any screen */
+@keyframes tape{to{transform:translateX(-12.5%)}}
+
+/* sections */
+section{padding-block:clamp(3.5rem,9vw,6.875rem)}
+.head{display:flex;flex-direction:column;gap:0.875rem;margin-bottom:2.375rem}
+h2{font:800 clamp(1.75rem,5vw,3.5rem)/1.02 var(--display);text-transform:uppercase;margin:0;text-wrap:balance}
+
+/* games */
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,28.75rem),1fr));gap:1.375rem;perspective:87.5rem}
+.game{position:relative;display:flex;flex-direction:column;text-decoration:none;background:var(--panel);border:1px solid var(--line);
+  transform-style:preserve-3d;transition:transform .18s ease-out,border-color .2s,box-shadow .2s;min-width:0}
+.game:hover{border-color:var(--blue);box-shadow:0 1.25rem 3.75rem -20px rgba(0,0,255,.8)}
+.cover{position:relative;aspect-ratio:16/9;overflow:hidden;border-bottom:1px solid var(--line);background:#000}
+.cover img{width:100%;height:100%;object-fit:contain;padding:9% 16%;display:block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.cover img.fit{padding:7% 16%}
+.game:hover .cover img{transform:scale(1.08)}
+.cover::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),transparent 0,transparent 30%,rgba(3,3,10,.6) 85%)}
+.info{display:flex;flex-direction:column;gap:0.625rem;padding:1.375rem}
+.info h3{font:800 1.25rem/1.15 var(--display);margin:0;text-transform:uppercase}
+.info p{margin:0;color:var(--dim)}
+.tags{display:flex;gap:0.5rem;flex-wrap:wrap}
+.tags i{font:600 0.6875rem/1 var(--mono);font-style:normal;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);padding:0.375rem 0.5rem;color:var(--dim)}
+.tags i.live{border-color:var(--blue);color:var(--glow)}
+.go{font:600 0.75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--glow);margin-top:0.375rem}
+
+/* closed beta */
+.beta{border-block:1px solid var(--line);background:
+  radial-gradient(ellipse at 15% 50%,color-mix(in srgb,var(--ecto) 14%,transparent),transparent 60%),var(--void)}
+.beta-grid{display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr);gap:clamp(1.5rem,4vw,3.5rem);align-items:center}
+.beta-art{position:relative;aspect-ratio:1;max-width:100%;display:grid;place-items:center}
+.beta-art img{width:72%;filter:drop-shadow(0 0 2.5rem color-mix(in srgb,var(--ecto) 60%,transparent));animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-0.75rem) rotate(-2deg)}}
+.beta-body{display:flex;flex-direction:column;gap:1.25rem;min-width:0}
+.beta .mono{color:var(--ecto)}
+.beta-body > p{margin:0;color:var(--dim);max-width:56ch}
+.spots{display:flex;flex-direction:column;gap:0.5rem;max-width:30rem}
+.spots-row{display:flex;justify-content:space-between;gap:1rem;font:600 0.75rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.spots-row b{color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{height:0.5rem;background:var(--panel);border:1px solid var(--line)}
+.bar i{display:block;height:100%;width:0;background:var(--ecto);box-shadow:0 0 0.75rem var(--ecto);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:0.625rem;counter-reset:s;max-width:40rem}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2rem minmax(0,1fr);gap:0.75rem;align-items:baseline;color:var(--dim)}
+.steps li::before{content:counter(s,decimal-leading-zero);font:600 0.75rem/1 var(--mono);color:var(--ecto)}
+.steps strong{color:var(--ink);font-weight:600}
+.btn.ecto{background:var(--ecto);border-color:var(--ecto);color:var(--void)}
+.btn.ecto:hover{box-shadow:0 0 1.875rem color-mix(in srgb,var(--ecto) 80%,transparent)}
+button.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:2.5rem;align-items:start}
+.about .text{display:flex;flex-direction:column;gap:1rem;max-width:62ch}
+.about p{margin:0;color:var(--dim)}
+.about p:first-child{color:var(--ink);font-size:1.25rem;line-height:1.45}
+.facts{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--panel)}
+.facts div{display:flex;flex-direction:column;gap:0.5rem;padding:1.125rem 1.25rem;border-bottom:1px solid var(--line)}
+.facts div:last-child{border-bottom:0}
+.facts strong{font:500 1rem/1.3 var(--display)}
+
+/* forms + dialogs */
+.mailform{display:flex;flex-direction:column;gap:0.875rem;width:min(100%,38.75rem)}
+.mailform label,.codebox label{font:600 0.75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);display:flex;flex-direction:column;gap:0.5rem}
+.mailform input,.mailform textarea,.codebox input{font:400 1rem/1.5 var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:0.8125rem 0.875rem;width:100%;letter-spacing:0;text-transform:none}
+.mailform textarea{min-height:9.375rem;resize:vertical}
+.mailform input:focus,.mailform textarea:focus,.codebox input:focus{outline:none;border-color:var(--glow);box-shadow:0 0 0 3px rgba(0,0,255,.45)}
+button.btn{cursor:pointer;align-self:flex-start}
+.sender{font:400 0.875rem/1.5 var(--body);color:var(--dim)}
+.sender b{font-family:var(--mono);font-weight:600;color:var(--glow);overflow-wrap:anywhere}
+.note{font:400 0.875rem/1.5 var(--body);padding:0.75rem 0.875rem;border:1px solid var(--line);background:var(--panel)}
+.note.ok{border-color:var(--good);color:var(--good)}
+.note.err{border-color:var(--bad);color:var(--bad)}
+.note.info{border-style:dashed;color:var(--dim)}
+.veil{position:fixed;inset:0;z-index:60;background:rgba(3,3,10,.86);backdrop-filter:blur(0.375rem);display:grid;place-items:center;padding:1rem}
+.codebox{width:min(100%,26.25rem);background:var(--void);border:1px solid var(--blue);box-shadow:0 0 5rem rgba(0,0,255,.6);padding:1.625rem;display:flex;flex-direction:column;gap:1rem}
+.codebox h3{font:800 1.25rem/1.15 var(--display);text-transform:uppercase;margin:0}
+.codebox p{margin:0;color:var(--dim);font-size:0.9375rem;overflow-wrap:anywhere}
+.codebox input.code{font:600 1.75rem/1 var(--mono);letter-spacing:.4em;text-align:center}
+.codebox .cta{justify-content:flex-start}
+
+/* contact */
+.contact{border-top:1px solid var(--line);background:radial-gradient(ellipse at 50% 120%,rgba(0,0,255,.55),transparent 65%)}
+.contact .wrap{display:flex;flex-direction:column;gap:1.5rem;align-items:flex-start}
+.contact p{margin:0;max-width:50ch;color:var(--dim)}
+footer{border-top:1px solid var(--line);padding-block:1.625rem}
+footer .wrap{display:flex;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;font:400 0.75rem/1.4 var(--mono);color:var(--dim)}
+
+.rise{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.rise.low{transform:translateY(1.625rem)}
+
+@media (max-width:720px){
+  .about,.beta-grid{grid-template-columns:minmax(0,1fr)}
+  .beta-art{width:min(60%,14rem);justify-self:center}
+  .nav ul{gap:0.875rem}
+  .who{max-width:10rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#top" aria-label="Lizora Software, back to top"><img src="img/logo.png" alt="Lizora"></a>
+    <div class="nav-right">
+      <nav aria-label="Main menu">
+        <ul>
+          <li><a href="#games">Games</a></li>
+          <li><a href="#beta">Beta</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="auth">
+        <span class="who" id="who" hidden></span>
+        <button class="chip" type="button" id="loginBtn">Log in</button>
+        <button class="chip alt" type="button" id="logoutBtn" hidden>Log out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero" id="hero">
+    <canvas id="dark" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="logo-box" id="logoBox">
+        <img src="img/logo.png" alt="Lizora Software" id="logoImg">
+        <img src="img/logo.png" alt="" class="ghost" style="filter:hue-rotate(120deg)">
+        <img src="img/logo.png" alt="" class="ghost g2" style="filter:hue-rotate(-90deg)">
+      </div>
+      <h1>Short games that <em>linger</em>.</h1>
+      <p>Lizora Software is the indie studio of Diëgo Mulder. Horror games, ghost hunting and everything you would rather not play in the dark.</p>
+      <div class="cta">
+        <a class="btn" href="#games">See the games</a>
+        <a class="btn alt" href="https://lizora-software.itch.io" target="_blank" rel="noopener">Play on itch.io</a>
+      </div>
+      <span class="hint">Move your mouse: you're holding the flashlight.</span>
+    </div>
+  </div>
+
+  <div class="tape" aria-hidden="true">
+    <div>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+      <span>Backrooms: The Lost Level</span><span>Late Night Call</span><span>TheGhostHuntr</span><span>Horrific Dreamer</span><span>Lizora Software</span>
+    </div>
+  </div>
+
+  <section id="games">
+    <div class="wrap">
+      <div class="head rise">
+        <span class="mono">Own projects</span>
+        <h2>The games</h2>
+      </div>
+      <div class="games">
+        <a class="game rise" href="https://lizora-software.itch.io/backrooms-the-lost-level" target="_blank" rel="noopener">
+          <div class="cover"><img src="img/lostlevel.jpg" alt="Backrooms: The Lost Level logo"></div>
+          <div class="info">
+            <div class="tags"><i class="live">Out on itch.io</i><i>Horror</i><i>Short</i></div>
+            <h3>Backrooms: The Lost Level</h3>
+            <p>You end up in a level of the Backrooms that nobody has discovered yet. There is only one goal: find a way out.</p>
+            <span class="go">Play on itch.io →</span>
+          </div>
+        </a>
+        <a class="game rise" href="https://lizora-software.itch.io/late-night-call" target="_blank" rel="noopener">
+          <div class="cover"><img src="img/latenight.jpg" alt="Late Night Call logo"></div>
+          <div class="info">
+            <div class="tags"><i class="live">Out on itch.io</i><i>Horror</i><i>Short</i></div>
+            <h3>Late Night Call</h3>
+            <p>You're a mortuary assistant and the power goes out in the middle of the night. Flip the breaker back on and finish your last tasks while a demon roams the building. Run out of time or fail to banish it, and it takes you over.</p>
+            <span class="go">Play on itch.io →</span>
+          </div>
+        </a>
+        <a class="game rise" href="https://lizora-software.itch.io/theghosthuntr?secret=zXIO1NSUED3AFfbYEEXE6ovU" target="_blank" rel="noopener">
+          <div class="cover"><img class="fit" src="img/ghost.jpg" alt="TheGhostHuntr logo: a green ghost"></div>
+          <div class="info">
+            <div class="tags"><i class="live">Playable now</i><i>Co-op up to 4</i><i>Proximity chat</i></div>
+            <h3>TheGhostHuntr</h3>
+            <p>Go ghost hunting with a group of four. Collect evidence to work out which ghost haunts the place, and once you're sure, start the ritual to banish it. With proximity chat you only hear each other when you're close.</p>
+            <span class="go">Play on itch.io →</span>
+          </div>
+        </a>
+        <a class="game rise" href="https://lizora-software.itch.io/horrific-dreamer?secret=iMnUBEkr7e5Fb117G2xx4D5E4Y" target="_blank" rel="noopener">
+          <div class="cover"><img src="img/dreamer.jpg" alt="Horrific Dreamer logo"></div>
+          <div class="info">
+            <div class="tags"><i>First project</i><i>Horror</i><i>Replayable</i></div>
+            <h3>Horrific Dreamer</h3>
+            <p>You're stuck in a bad lucid dream. Find every key in a large area while something hunts you. Once you have them all, a door appears somewhere: your only way out of the dream.</p>
+            <span class="go">View on itch.io →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="beta" id="beta">
+    <div class="wrap beta-grid">
+      <div class="beta-art rise"><img src="img/ghost.jpg" alt="" style="mix-blend-mode:screen"></div>
+      <div class="beta-body rise">
+        <span class="mono">TheGhostHuntr · Closed beta</span>
+        <h2>Join the hunt early</h2>
+        <p>100 players get into the closed beta of TheGhostHuntr before anyone else. Log in, claim your spot, and you'll hear from me when the beta starts.</p>
+        <div class="spots">
+          <div class="spots-row"><span>Spots taken</span><b id="spotsText">– / 100</b></div>
+          <div class="bar" role="progressbar" aria-label="Beta spots taken" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="spotsBar"><i id="spotsFill"></i></div>
+        </div>
+        <ol class="steps">
+          <li><span><strong>Log in and sign up.</strong> One spot per email address.</span></li>
+          <li><span><strong>Get a confirmation email</strong> that you're in.</span></li>
+          <li><span><strong>When the beta starts</strong>, you get an email with the launcher and your personal activation code.</span></li>
+          <li><span><strong>Founder rewards:</strong> play the Steam release with the same email address and you get them.</span></li>
+        </ol>
+        <button class="btn ecto" type="button" id="betaBtn">Log in to join</button>
+        <div class="note" id="betaNote" role="status" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="head rise">
+        <span class="mono">About</span>
+        <h2>One developer, many nightmares</h2>
+      </div>
+      <div class="about">
+        <div class="facts rise">
+          <div><span class="mono">Who</span><strong>Diëgo Mulder, game developer</strong></div>
+          <div><span class="mono">Studio</span><strong>Lizora Software</strong></div>
+          <div><span class="mono">Specialty</span><strong>Horror games</strong></div>
+          <div><span class="mono">Games</span><strong>4 on itch.io</strong></div>
+        </div>
+        <div class="text rise">
+          <p>Games have always been my biggest passion. I want to create unique, gripping experiences for players all over the world.</p>
+          <p>Building an immersive game world, designing tense gameplay or solving a technical problem: I enjoy every part of game development.</p>
+          <p>I keep learning new techniques to make better games. The goal stays the same: try something new and give players a good time, even if that time is a little scary.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <span class="mono">Contact</span>
+      <h2>Got questions?</h2>
+      <p>Feel free to send me a message.</p>
+      <form class="mailform" id="mailForm" novalidate>
+        <label for="mfEmail" id="mfEmailWrap">Your email address
+          <input id="mfEmail" type="email" autocomplete="email" placeholder="name@example.com" required>
+        </label>
+        <p class="sender" id="mfSender" hidden>Sending as <b id="mfSenderMail"></b></p>
+        <label for="mfText">Your message
+          <textarea id="mfText" placeholder="What's it about?" required maxlength="4000"></textarea>
+        </label>
+        <button class="btn" type="submit" id="mfSend">Send</button>
+        <div class="note" id="mfNote" role="status" hidden></div>
+      </form>
+      <div class="cta">
+        <a class="btn alt" href="https://lizora-software.itch.io" target="_blank" rel="noopener">Follow on itch.io</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 Lizora Software</span><span>Diëgo Mulder</span></div>
+</footer>
+
+<!-- code check for guests sending a message -->
+<div class="veil" id="veil" hidden>
+  <form class="codebox" id="codeForm" role="dialog" aria-modal="true" aria-labelledby="codeTitle" novalidate>
+    <h3 id="codeTitle">Enter your code</h3>
+    <p id="codeInfo"></p>
+    <label for="codeIn">6-digit code
+      <input class="code" id="codeIn" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000">
+    </label>
+    <div class="note err" id="codeErr" role="alert" hidden></div>
+    <div class="cta">
+      <button class="btn" type="submit" id="codeOk">Confirm and send</button>
+      <button class="btn alt" type="button" id="codeCancel">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<!-- log in -->
+<div class="veil" id="loginVeil" hidden>
+  <form class="codebox" id="loginForm" role="dialog" aria-modal="true" aria-labelledby="loginTitle" novalidate>
+    <h3 id="loginTitle">Log in</h3>
+    <p id="loginInfo">Enter your email address. We'll send you a login code, no password needed.</p>
+    <label for="loginMail" id="loginMailWrap">Email address
+      <input id="loginMail" type="email" autocomplete="email" placeholder="name@example.com">
+    </label>
+    <label for="loginCode" id="loginCodeWrap" hidden>Code from the email
+      <input class="code" id="loginCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="00000000">
+    </label>
+    <div class="note" id="loginNote" role="alert" hidden></div>
+    <div class="cta">
+      <button class="btn" type="submit" id="loginOk">Send code</button>
+      <button class="btn alt" type="button" id="loginCancel">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<script>
+/* visuals: flashlight hero, logo glitch, card tilt, scroll rise */
+(function(){
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.getElementById('hero'), cv = document.getElementById('dark'), ctx = cv.getContext('2d');
+  var logo = document.getElementById('logoImg'), pat = document.createElement('canvas');
+  var W = 0, H = 0, mx = 0, my = 0, tx = 0, ty = 0, hasMouse = false, t0 = performance.now();
+
+  function build(){
+    var r = hero.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = pat.width = W * d; cv.height = pat.height = H * d;
+    var p = pat.getContext('2d'); p.setTransform(d,0,0,d,0,0); p.clearRect(0,0,W,H);
+    if(!logo.naturalWidth) return;
+    var lw = Math.max(200, Math.min(W * .26, Math.max(340, W * .18))), lh = lw * logo.naturalHeight / logo.naturalWidth;
+    var sx = lw * 1.25, sy = lh * 2.1, n = 0;
+    p.translate(W/2, H/2); p.rotate(-Math.PI/3);
+    var R = Math.hypot(W, H) / 2 + lw;
+    for(var y = -R; y < R; y += sy){
+      n++;
+      for(var x = -R - (n % 2) * sx / 2, k = 0; x < R; x += sx, k++){
+        p.globalAlpha = [1, .55, .3][(k + n * 2) % 3];
+        p.drawImage(logo, x, y, lw, lh);
+      }
+    }
+    ctx.setTransform(d,0,0,d,0,0);
+    if(!hasMouse){ mx = tx = W * .68; my = ty = H * .45; }
+    if(still) draw(0);
+  }
+  function draw(now){
+    var t = (now - t0) / 1000;
+    if(!hasMouse && !still){ tx = W * (.62 + .26 * Math.sin(t * .5)); ty = H * (.5 + .3 * Math.sin(t * .8 + 1)); }
+    mx += (tx - mx) * .12; my += (ty - my) * .12;
+    var rad = Math.max(220, Math.min(W, H) * .6) * (still ? 1 : (.96 + .04 * Math.sin(t * 23)) * (Math.random() < .015 ? .6 : 1));
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0,0,W,H);
+    ctx.drawImage(pat, 0, 0, W, H);
+    var g = ctx.createRadialGradient(mx, my, 0, mx, my, rad);
+    g.addColorStop(0, 'rgba(0,0,0,.95)'); g.addColorStop(.5, 'rgba(0,0,0,.45)'); g.addColorStop(1, 'rgba(0,0,0,.07)');
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    if(!still) requestAnimationFrame(draw);
+  }
+  hero.addEventListener('pointermove', function(e){
+    var r = hero.getBoundingClientRect(); hasMouse = true; tx = e.clientX - r.left; ty = e.clientY - r.top;
+  });
+  hero.addEventListener('pointerleave', function(){ hasMouse = false; });
+  addEventListener('resize', build);
+  if(logo.complete) build(); else logo.addEventListener('load', build);
+  if(!still) requestAnimationFrame(draw);
+
+  if(still) return;
+
+  var box = document.getElementById('logoBox');
+  setInterval(function(){ box.classList.add('zap'); setTimeout(function(){ box.classList.remove('zap'); }, 500); }, 4200);
+
+  document.querySelectorAll('.game').forEach(function(c){
+    c.addEventListener('pointermove', function(e){
+      var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      c.style.transform = 'rotateY(' + (x - .5) * 10 + 'deg) rotateX(' + (.5 - y) * 8 + 'deg) translateY(-4px)';
+      c.style.setProperty('--mx', x * 100 + '%'); c.style.setProperty('--my', y * 160 + '%');
+    });
+    c.addEventListener('pointerleave', function(){ c.style.transform = ''; });
+  });
+
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove('low'); io.unobserve(e.target); } });
+    }, {rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.rise').forEach(function(el){
+      if(el.getBoundingClientRect().top > innerHeight){ el.classList.add('low'); io.observe(el); }
+    });
+  }
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ===== Settings =====
+   SUPABASE: login by email code + the beta database (table beta_signups, max 100).
+   EMAILJS: the code for guests who send a message, and the beta confirmation email.
+   FORMSPREE: delivers contact messages to LizoraSoftware@gmail.com. */
+var CONFIG = {
+  SUPABASE_URL: 'https://ufodkirdobuhtrvdqyxy.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmb2RraXJkb2J1aHRydmRxeXh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyMjA0NzcsImV4cCI6MjExMDc5NjQ3N30.eLl6oCUQ-mPATTj47D5MyOXylOselRA_d5d7k9BCRQg',
+  BETA_LIMIT: 100,
+  FORMSPREE: 'https://formspree.io/f/xeojbbrb',
+  EMAILJS_PUBLIC_KEY: 'NJHJvwlZa4LD9luCN',
+  EMAILJS_SERVICE_ID: 'service_zy4ywv9',
+  EMAILJS_CODE_TEMPLATE_ID: 'template_ahuzvco',
+  EMAILJS_BETA_TEMPLATE_ID: 'template_m7cnj0g'
+};
+
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var sb = (CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY && window.supabase)
+    ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
+  var user = null;          /* logged-in user's email, or null */
+  var beta = {taken:null, joined:false, open:true};
+
+  function say(el, kind, msg){ el.className = 'note ' + kind; el.textContent = msg; el.hidden = false; }
+  function busy(btn, on, label){ btn.disabled = on; btn.textContent = label; }
+  function post(url, body){
+    return fetch(url, {method:'POST', headers:{'Accept':'application/json','Content-Type':'application/json'}, body:JSON.stringify(body)})
+      .then(function(r){ return r.text().then(function(t){ return {ok:r.ok, why:r.status + ' ' + t}; }); },
+            function(){ return {ok:false, why:'no connection'}; });
+  }
+  function emailjs(template, params){
+    return post('https://api.emailjs.com/api/v1.0/email/send', {
+      service_id:CONFIG.EMAILJS_SERVICE_ID, template_id:template, user_id:CONFIG.EMAILJS_PUBLIC_KEY, template_params:params
+    });
+  }
+  function newCode(){ var a = new Uint32Array(1); crypto.getRandomValues(a); return String(100000 + a[0] % 900000); }
+
+  /* ---------- log in / log out ---------- */
+  var loginVeil = $('loginVeil'), loginForm = $('loginForm'), loginMail = $('loginMail'), loginCode = $('loginCode'),
+      loginNote = $('loginNote'), loginOk = $('loginOk'), loginStep = 'mail', loginAddr = '', afterLogin = null;
+
+  function openLogin(then){
+    afterLogin = then || null;
+    loginStep = 'mail'; loginNote.hidden = true;
+    $('loginMailWrap').hidden = false; $('loginCodeWrap').hidden = true;
+    $('loginInfo').textContent = "Enter your email address. We'll send you a login code, no password needed.";
+    busy(loginOk, false, 'Send code');
+    loginVeil.hidden = false;
+    if(!sb){ say(loginNote, 'info', "Logging in isn't available yet. Please try again later."); loginOk.disabled = true; return; }
+    loginMail.focus();
+  }
+  function closeLogin(){ loginVeil.hidden = true; afterLogin = null; }
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault(); loginNote.hidden = true;
+    if(!sb) return;
+    if(loginStep === 'mail'){
+      var addr = loginMail.value.trim().toLowerCase();
+      if(!EMAIL_RE.test(addr)){ say(loginNote, 'err', 'Enter a valid email address, for example name@example.com.'); loginMail.focus(); return; }
+      busy(loginOk, true, 'Sending');
+      sb.auth.signInWithOtp({email:addr, options:{shouldCreateUser:true}}).then(function(res){
+        busy(loginOk, false, 'Log in');
+        if(res.error){ say(loginNote, 'err', "We couldn't send the code. Check your email address and try again. (" + res.error.message + ')'); busy(loginOk, false, 'Send code'); return; }
+        loginAddr = addr; loginStep = 'code';
+        $('loginMailWrap').hidden = true; $('loginCodeWrap').hidden = false;
+        $('loginInfo').textContent = 'We sent a login code to ' + addr + '. Enter it below. Check your spam folder too.';
+        loginCode.value = ''; loginCode.focus();
+      });
+    } else {
+      var code = loginCode.value.trim();
+      if(!/^\d{6,8}$/.test(code)){ say(loginNote, 'err', 'Enter the full code from the email.'); return; }
+      busy(loginOk, true, 'Checking');
+      sb.auth.verifyOtp({email:loginAddr, token:code, type:'email'}).then(function(res){
+        busy(loginOk, false, 'Log in');
+        if(res.error){ say(loginNote, 'err', "That code isn't right or has expired. Check your inbox and try again."); loginCode.select(); return; }
+        var next = afterLogin; closeLogin();
+        if(next) next();
+      });
+    }
+  });
+  $('loginCancel').addEventListener('click', closeLogin);
+  $('loginBtn').addEventListener('click', function(){ openLogin(); });
+  $('logoutBtn').addEventListener('click', function(){ if(sb) sb.auth.signOut(); });
+
+  function setUser(mail){
+    user = mail ? mail.toLowerCase() : null;
+    $('who').textContent = user || ''; $('who').hidden = !user;
+    $('loginBtn').hidden = !!user; $('logoutBtn').hidden = !user;
+    /* logged in = trusted: no email field and no code for the contact form */
+    $('mfEmailWrap').hidden = !!user; $('mfSender').hidden = !user; $('mfSenderMail').textContent = user || '';
+    refreshBeta();
+  }
+  if(sb){
+    sb.auth.onAuthStateChange(function(_evt, session){ setUser(session && session.user ? session.user.email : null); });
+  } else setUser(null);
+
+  /* ---------- closed beta ---------- */
+  var betaBtn = $('betaBtn'), betaNote = $('betaNote');
+  function drawBeta(){
+    var lim = CONFIG.BETA_LIMIT, t = beta.taken;
+    $('spotsText').textContent = (t == null ? '–' : t) + ' / ' + lim;
+    $('spotsFill').style.width = (t == null ? 0 : Math.min(100, t / lim * 100)) + '%';
+    $('spotsBar').setAttribute('aria-valuenow', t == null ? 0 : t);
+    betaBtn.disabled = false;
+    if(!sb){ betaBtn.textContent = 'Sign-up opens soon'; betaBtn.disabled = true; return; }
+    if(beta.joined){ betaBtn.textContent = "You're in"; betaBtn.disabled = true; return; }
+    if(!beta.open){
+      betaBtn.textContent = 'Sign-ups are closed'; betaBtn.disabled = true;
+      say(betaNote, 'info', 'The closed beta has started, so sign-ups are closed. Keep an eye on itch.io for what comes next.');
+      return;
+    }
+    if(t != null && t >= lim){ betaBtn.textContent = 'All spots are taken'; betaBtn.disabled = true; return; }
+    betaBtn.textContent = user ? 'Join the closed beta' : 'Log in to join';
+  }
+  function refreshBeta(){
+    if(!sb){ drawBeta(); return; }
+    sb.rpc('beta_status').then(function(res){
+      if(!res.error && res.data){ beta.taken = res.data.taken; beta.joined = !!res.data.joined; beta.open = res.data.open !== false; }
+      drawBeta();
+    });
+  }
+  function joinBeta(){
+    busy(betaBtn, true, 'Signing up'); betaNote.hidden = true;
+    sb.rpc('join_beta').then(function(res){
+      if(res.error){ drawBeta(); say(betaNote, 'err', "Your sign-up didn't go through. Please try again. (" + res.error.message + ')'); return; }
+      var st = res.data && res.data.status;
+      if(st === 'closed'){ beta.open = false; drawBeta(); return; }
+      if(st === 'full'){ beta.taken = CONFIG.BETA_LIMIT; drawBeta(); say(betaNote, 'err', 'Sorry, all ' + CONFIG.BETA_LIMIT + ' spots were just taken.'); return; }
+      beta.joined = true;
+      if(st === 'joined'){
+        say(betaNote, 'ok', "You're in the closed beta. A confirmation email is on its way to " + user + '.');
+        if(CONFIG.EMAILJS_BETA_TEMPLATE_ID) emailjs(CONFIG.EMAILJS_BETA_TEMPLATE_ID, {to_email:user, email:user});
+      } else say(betaNote, 'ok', 'You were already signed up with ' + user + '.');
+      refreshBeta();
+    });
+  }
+  betaBtn.addEventListener('click', function(){
+    if(!sb) return;
+    if(!user){ openLogin(joinBeta); return; }
+    joinBeta();
+  });
+  drawBeta();
+
+  /* ---------- contact form ---------- */
+  var form = $('mailForm'), email = $('mfEmail'), text = $('mfText'), send = $('mfSend'), note = $('mfNote');
+  var veil = $('veil'), codeForm = $('codeForm'), codeIn = $('codeIn'), codeErr = $('codeErr'), codeOk = $('codeOk');
+  var pending = null;
+
+  function deliver(addr, msg){
+    return post(CONFIG.FORMSPREE, {email:addr, message:msg, _subject:'New message via LizoraSoftware.nl'}).then(function(res){
+      if(res.ok){ text.value = ''; say(note, 'ok', 'Your message has been sent. Thanks!'); }
+      else say(note, 'err', "Your message wasn't sent. Try again later or email LizoraSoftware@gmail.com directly.");
+      return res.ok;
+    });
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault(); note.hidden = true;
+    var addr = user || email.value.trim(), msg = text.value.trim();
+    if(!EMAIL_RE.test(addr)){ say(note, 'err', 'Enter a valid email address, for example name@example.com.'); email.focus(); return; }
+    if(msg.length < 5){ say(note, 'err', 'Write a message first.'); text.focus(); return; }
+    busy(send, true, 'Sending');
+    if(user){ deliver(addr, msg).then(function(){ busy(send, false, 'Send'); }); return; }   /* trusted: no code */
+    var code = newCode();
+    emailjs(CONFIG.EMAILJS_CODE_TEMPLATE_ID, {to_email:addr, email:addr, code:code, passcode:code,
+      time:new Date(Date.now() + 10 * 60 * 1000).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})
+    }).then(function(res){
+      busy(send, false, 'Send');
+      if(!res.ok){ say(note, 'err', "We couldn't send the code. Check your email address and try again. (Reason: " + res.why.slice(0, 160) + ')'); return; }
+      pending = {addr:addr, msg:msg, code:code, until:Date.now() + 10 * 60 * 1000, tries:0};
+      $('codeInfo').textContent = 'We sent a code to ' + addr + '. Enter it within 10 minutes to send your message. Check your spam folder too.';
+      codeErr.hidden = true; codeIn.value = ''; veil.hidden = false; codeIn.focus();
+    });
+  });
+
+  codeForm.addEventListener('submit', function(e){
+    e.preventDefault(); codeErr.hidden = true;
+    if(!pending) return;
+    var code = codeIn.value.trim();
+    if(Date.now() > pending.until || pending.tries >= 5){
+      pending = null; veil.hidden = true;
+      say(note, 'err', 'The code has expired or was entered wrong too often. Click Send again for a new code.'); return;
+    }
+    if(code !== pending.code){
+      pending.tries++;
+      say(codeErr, 'err', "That code isn't right. Check your inbox and try again."); codeIn.select(); return;
+    }
+    busy(codeOk, true, 'Sending');
+    var p = pending; pending = null;
+    deliver(p.addr, p.msg).then(function(){ busy(codeOk, false, 'Confirm and send'); veil.hidden = true; });
+  });
+  $('codeCancel').addEventListener('click', function(){ veil.hidden = true; pending = null; });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(!veil.hidden){ veil.hidden = true; pending = null; }
+    if(!loginVeil.hidden) closeLogin();
+  });
+})();
+</script>
+</body>
+</html>
